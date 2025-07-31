@@ -46,26 +46,40 @@
 ```csharp
 static void BubbleSort(int[] arr)
 {
+    // Get the total number of elements in the array
     int n = arr.Length;
+    
+    // This flag helps us detect when no swaps occur (array is sorted)
     bool swapped;
     
+    // Outer loop: controls number of passes through the array
+    // We need at most n-1 passes to sort n elements
     for (int i = 0; i < n - 1; i++)
     {
+        // Reset the swap flag for this pass
         swapped = false;
         
-        // Last i elements are already sorted
+        // Inner loop: compare adjacent elements
+        // After each pass, the largest element "bubbles up" to the end
+        // So we can reduce the range by 'i' (last i elements are already sorted)
         for (int j = 0; j < n - i - 1; j++)
         {
+            // Compare current element with next element
             if (arr[j] > arr[j + 1])
             {
-                // Swap using C# tuple deconstruction
+                // Swap using modern C# tuple deconstruction syntax
+                // This is equivalent to: temp = arr[j]; arr[j] = arr[j+1]; arr[j+1] = temp;
                 (arr[j], arr[j + 1]) = (arr[j + 1], arr[j]);
+                
+                // Mark that we made a swap in this pass
                 swapped = true;
             }
         }
         
-        // Optimization: If no swaps, array is sorted
-        if (!swapped) break;
+        // OPTIMIZATION: If no swaps occurred in this pass,
+        // the array is already sorted, so we can exit early
+        if (!swapped) 
+            break;
     }
 }
 ```
@@ -91,19 +105,26 @@ static void BubbleSort(int[] arr)
 ```csharp
 static void SelectionSort(int[] arr)
 {
+    // Get the total number of elements
     int n = arr.Length;
     
+    // Outer loop: position where we'll place the next minimum element
+    // We only need to go to n-1 because the last element will be in place automatically
     for (int i = 0; i < n - 1; i++)
     {
-        // Find minimum element index
+        // Assume the first unsorted element is the minimum
         int minIndex = i;
+        
+        // Inner loop: find the actual minimum in the remaining unsorted portion
         for (int j = i + 1; j < n; j++)
         {
+            // If we find a smaller element, update our minimum index
             if (arr[j] < arr[minIndex])
                 minIndex = j;
         }
         
-        // Swap only if needed
+        // Only swap if we found a smaller element
+        // This optimization reduces unnecessary swaps when element is already in correct position
         if (minIndex != i)
             (arr[i], arr[minIndex]) = (arr[minIndex], arr[i]);
     }
@@ -133,19 +154,28 @@ static void InsertionSort(int[] arr)
 {
     int n = arr.Length;
     
+    // Start from the second element (index 1) since first element is considered "sorted"
     for (int i = 1; i < n; i++)
     {
-        int key = arr[i];  // Element to be positioned
+        // Store the current element we need to position correctly
+        int key = arr[i];
+        
+        // Start comparing with the element just before the current element
         int j = i - 1;
         
-        // Shift elements greater than key
+        // Move all elements greater than 'key' one position to the right
+        // This creates space for 'key' to be inserted in the correct position
         while (j >= 0 && arr[j] > key)
         {
+            // Shift the larger element one position to the right
             arr[j + 1] = arr[j];
+            
+            // Move to the previous element
             j--;
         }
         
-        // Insert key at correct position
+        // Insert 'key' at its correct position
+        // j+1 is the correct position because j either went to -1 or points to an element <= key
         arr[j + 1] = key;
     }
 }
@@ -174,22 +204,33 @@ static void ShellSort(int[] arr)
 {
     int n = arr.Length;
     
-    // Start with large gap, then reduce
+    // Start with a large gap and keep reducing it
+    // Common sequence: n/2, n/4, n/8, ..., 1
     for (int gap = n / 2; gap > 0; gap /= 2)
     {
-        // Perform gapped insertion sort
+        // Perform insertion sort for elements that are 'gap' distance apart
+        // This allows elements to move closer to their final position quickly
         for (int i = gap; i < n; i++)
         {
+            // Store the current element to be positioned
             int temp = arr[i];
             int j;
             
-            // Shift earlier gap-sorted elements
+            // Compare with elements that are 'gap' positions behind
+            // Move elements forward until we find the correct position for 'temp'
             for (j = i; j >= gap && arr[j - gap] > temp; j -= gap)
+            {
+                // Move the larger element 'gap' positions forward
                 arr[j] = arr[j - gap];
-                
+            }
+            
+            // Insert 'temp' at its correct position
             arr[j] = temp;
         }
     }
+    
+    // The final iteration with gap=1 is equivalent to insertion sort
+    // But by then, elements are much closer to their final positions
 }
 ```
 
@@ -215,47 +256,75 @@ static void ShellSort(int[] arr)
 ```csharp
 static void MergeSort(int[] arr, int left, int right)
 {
+    // Base case: if left >= right, we have 1 or 0 elements (already sorted)
     if (left < right)
     {
-        // Avoid overflow: (left + right) / 2 can overflow
+        // Calculate the middle point to divide the array
+        // Use this formula to avoid integer overflow that could occur with (left + right) / 2
         int mid = left + (right - left) / 2;
         
-        // Recursively sort both halves
+        // DIVIDE: Recursively sort the left half
         MergeSort(arr, left, mid);
+        
+        // DIVIDE: Recursively sort the right half  
         MergeSort(arr, mid + 1, right);
         
-        // Merge the sorted halves
+        // CONQUER: Merge the two sorted halves
         Merge(arr, left, mid, right);
     }
 }
 
 static void Merge(int[] arr, int left, int mid, int right)
 {
-    // Create temporary arrays for left and right subarrays
-    int leftSize = mid - left + 1;
-    int rightSize = right - mid;
+    // Calculate sizes of the two subarrays to be merged
+    int leftSize = mid - left + 1;    // Size of left subarray
+    int rightSize = right - mid;      // Size of right subarray
     
+    // Create temporary arrays to hold the two subarrays
     int[] leftArray = new int[leftSize];
     int[] rightArray = new int[rightSize];
     
-    // Copy data to temporary arrays
-    Array.Copy(arr, left, leftArray, 0, leftSize);
-    Array.Copy(arr, mid + 1, rightArray, 0, rightSize);
+    // Copy data from main array to temporary arrays
+    Array.Copy(arr, left, leftArray, 0, leftSize);           // Copy left subarray
+    Array.Copy(arr, mid + 1, rightArray, 0, rightSize);      // Copy right subarray
     
-    // Merge back into original array
-    int i = 0, j = 0, k = left;
+    // Initialize pointers for merging
+    int i = 0;      // Pointer for leftArray
+    int j = 0;      // Pointer for rightArray  
+    int k = left;   // Pointer for merged array (starting from 'left' position)
     
+    // Merge the two arrays back into arr[left..right] in sorted order
     while (i < leftSize && j < rightSize)
     {
+        // Compare elements from both arrays and pick the smaller one
         if (leftArray[i] <= rightArray[j])
-            arr[k++] = leftArray[i++];
+        {
+            arr[k] = leftArray[i];
+            i++;    // Move to next element in left array
+        }
         else
-            arr[k++] = rightArray[j++];
+        {
+            arr[k] = rightArray[j];
+            j++;    // Move to next element in right array
+        }
+        k++;        // Move to next position in merged array
     }
     
-    // Copy remaining elements
-    while (i < leftSize) arr[k++] = leftArray[i++];
-    while (j < rightSize) arr[k++] = rightArray[j++];
+    // Copy any remaining elements from left array (if any)
+    while (i < leftSize) 
+    {
+        arr[k] = leftArray[i];
+        i++;
+        k++;
+    }
+    
+    // Copy any remaining elements from right array (if any)
+    while (j < rightSize) 
+    {
+        arr[k] = rightArray[j];
+        j++;
+        k++;
+    }
 }
 ```
 
@@ -281,35 +350,51 @@ static void Merge(int[] arr, int left, int mid, int right)
 ```csharp
 static void QuickSort(int[] arr, int low, int high)
 {
+    // Base case: if low >= high, we have 1 or 0 elements (already sorted)
     if (low < high)
     {
-        // Partition and get pivot position
+        // Partition the array and get the position where pivot ends up
+        // After partitioning: elements smaller than pivot are on left,
+        // elements larger than pivot are on right
         int pivotIndex = Partition(arr, low, high);
         
-        // Recursively sort partitions
+        // Recursively sort the left partition (elements smaller than pivot)
         QuickSort(arr, low, pivotIndex - 1);
+        
+        // Recursively sort the right partition (elements larger than pivot)
         QuickSort(arr, pivotIndex + 1, high);
     }
 }
 
 static int Partition(int[] arr, int low, int high)
 {
-    // Choose rightmost element as pivot
+    // Choose the rightmost element as the pivot
+    // (Other strategies: first element, random element, median-of-three)
     int pivot = arr[high];
-    int i = low - 1;  // Index of smaller element
     
+    // Index of the smaller element - indicates the right position of pivot found so far
+    int i = low - 1;
+    
+    // Traverse through the array and rearrange elements
     for (int j = low; j < high; j++)
     {
-        // If current element <= pivot
+        // If current element is smaller than or equal to pivot
         if (arr[j] <= pivot)
         {
+            // Increment index of smaller element
             i++;
+            
+            // Swap current element with element at index i
+            // This moves smaller elements to the left side
             (arr[i], arr[j]) = (arr[j], arr[i]);
         }
     }
     
-    // Place pivot in correct position
+    // Place pivot in its correct position
+    // All elements to the left are smaller, all elements to the right are larger
     (arr[i + 1], arr[high]) = (arr[high], arr[i + 1]);
+    
+    // Return the position of the pivot
     return i + 1;
 }
 ```
@@ -338,38 +423,51 @@ static void HeapSort(int[] arr)
 {
     int n = arr.Length;
     
-    // Build max heap
+    // BUILD MAX HEAP PHASE
+    // Start from the last non-leaf node and heapify each node
+    // Last non-leaf node is at index (n/2 - 1)
     for (int i = n / 2 - 1; i >= 0; i--)
         Heapify(arr, n, i);
     
+    // SORTING PHASE
     // Extract elements from heap one by one
     for (int i = n - 1; i > 0; i--)
     {
-        // Move current root to end
+        // Move current root (maximum element) to the end
+        // This places the largest remaining element in its final sorted position
         (arr[0], arr[i]) = (arr[i], arr[0]);
         
-        // Heapify reduced heap
+        // Reduce heap size and heapify the root to maintain heap property
+        // Now the heap has one less element
         Heapify(arr, i, 0);
     }
 }
 
 static void Heapify(int[] arr, int heapSize, int rootIndex)
 {
+    // Initialize largest as root
     int largest = rootIndex;
-    int leftChild = 2 * rootIndex + 1;
-    int rightChild = 2 * rootIndex + 2;
     
-    // Find largest among root and children
+    // Calculate indices of left and right children
+    int leftChild = 2 * rootIndex + 1;     // Left child index
+    int rightChild = 2 * rootIndex + 2;    // Right child index
+    
+    // Check if left child exists and is greater than root
     if (leftChild < heapSize && arr[leftChild] > arr[largest])
         largest = leftChild;
         
+    // Check if right child exists and is greater than current largest
     if (rightChild < heapSize && arr[rightChild] > arr[largest])
         largest = rightChild;
     
-    // If largest is not root, swap and heapify affected sub-tree
+    // If largest is not root, we need to swap and continue heapifying
     if (largest != rootIndex)
     {
+        // Swap root with the largest child
         (arr[rootIndex], arr[largest]) = (arr[largest], arr[rootIndex]);
+        
+        // Recursively heapify the affected sub-tree
+        // The swap might have violated heap property in the sub-tree
         Heapify(arr, heapSize, largest);
     }
 }
@@ -399,9 +497,10 @@ static void Heapify(int[] arr, int heapSize, int rootIndex)
 ```csharp
 static void CountingSort(int[] arr)
 {
+    // Handle empty array
     if (arr.Length == 0) return;
     
-    // Find range of input
+    // STEP 1: Find the range of input values
     int min = arr[0], max = arr[0];
     foreach (int num in arr)
     {
@@ -409,26 +508,38 @@ static void CountingSort(int[] arr)
         if (num > max) max = num;
     }
     
+    // Calculate the range of values
     int range = max - min + 1;
+    
+    // Create counting array to store frequency of each element
     int[] count = new int[range];
+    
+    // Create output array to store sorted result
     int[] output = new int[arr.Length];
     
-    // Count frequency of each element
+    // STEP 2: Count frequency of each element
     foreach (int num in arr)
+    {
+        // Normalize the number by subtracting min (handles negative numbers)
         count[num - min]++;
+    }
     
-    // Calculate cumulative count (positions)
+    // STEP 3: Calculate cumulative count (positions in sorted array)
+    // count[i] now contains the number of elements less than or equal to i
     for (int i = 1; i < range; i++)
         count[i] += count[i - 1];
     
-    // Build output array (reverse order for stability)
+    // STEP 4: Build the output array (traverse in reverse to maintain stability)
     for (int i = arr.Length - 1; i >= 0; i--)
     {
+        // Find the correct position for arr[i] in the sorted array
         output[count[arr[i] - min] - 1] = arr[i];
+        
+        // Decrease count for this element (for handling duplicates)
         count[arr[i] - min]--;
     }
     
-    // Copy back to original array
+    // STEP 5: Copy sorted elements back to original array
     Array.Copy(output, arr, arr.Length);
 }
 ```
@@ -456,37 +567,52 @@ static void RadixSort(int[] arr)
 {
     if (arr.Length == 0) return;
     
-    // Find maximum to determine number of digits
+    // STEP 1: Find the maximum number to determine number of digits
     int max = arr[0];
     foreach (int num in arr)
         if (num > max) max = num;
     
-    // Sort by each digit using counting sort
+    // STEP 2: Sort by each digit using counting sort
+    // Start from least significant digit (1s place) and move to most significant
+    // exp represents the current digit position (1, 10, 100, 1000, ...)
     for (int exp = 1; max / exp > 0; exp *= 10)
         CountingSortByDigit(arr, exp);
 }
 
 static void CountingSortByDigit(int[] arr, int exp)
 {
+    // Create output array to store sorted numbers for this digit
     int[] output = new int[arr.Length];
-    int[] count = new int[10]; // For digits 0-9
     
-    // Count frequency of each digit
+    // Count array for digits 0-9
+    int[] count = new int[10];
+    
+    // STEP 1: Count frequency of each digit at the current position
     foreach (int num in arr)
+    {
+        // Extract the digit at position 'exp' (0-9)
         count[(num / exp) % 10]++;
+    }
     
-    // Calculate cumulative count
+    // STEP 2: Calculate cumulative count 
+    // count[i] now contains actual position of this digit in output array
     for (int i = 1; i < 10; i++)
         count[i] += count[i - 1];
     
-    // Build output array
+    // STEP 3: Build the output array (traverse in reverse for stability)
     for (int i = arr.Length - 1; i >= 0; i--)
     {
-        output[count[(arr[i] / exp) % 10] - 1] = arr[i];
-        count[(arr[i] / exp) % 10]--;
+        // Get the digit at current position
+        int digit = (arr[i] / exp) % 10;
+        
+        // Place the number at its correct position based on this digit
+        output[count[digit] - 1] = arr[i];
+        
+        // Decrease count for this digit
+        count[digit]--;
     }
     
-    // Copy back to original
+    // STEP 4: Copy sorted numbers back to original array
     Array.Copy(output, arr, arr.Length);
 }
 ```
@@ -510,9 +636,10 @@ static void CountingSortByDigit(int[] arr, int exp)
 ```csharp
 static void BucketSort(int[] arr)
 {
+    // Handle arrays with 1 or 0 elements
     if (arr.Length <= 1) return;
     
-    // Find min and max
+    // STEP 1: Find the range of input values
     int min = arr[0], max = arr[0];
     foreach (int num in arr)
     {
@@ -520,28 +647,41 @@ static void BucketSort(int[] arr)
         if (num > max) max = num;
     }
     
-    // Create buckets
+    // STEP 2: Create buckets
+    // Number of buckets should be reasonable (not too many, not too few)
     int bucketCount = Math.Min(arr.Length, max - min + 1);
+    
+    // Initialize array of lists (each list represents a bucket)
     var buckets = new List<int>[bucketCount];
     for (int i = 0; i < bucketCount; i++)
         buckets[i] = new List<int>();
     
-    // Distribute elements into buckets
+    // STEP 3: Distribute elements into buckets
     foreach (int num in arr)
     {
+        // Calculate which bucket this number belongs to
+        // This formula ensures even distribution across buckets
         int bucketIndex = Math.Min((num - min) * bucketCount / (max - min + 1), bucketCount - 1);
+        
+        // Add the number to the appropriate bucket
         buckets[bucketIndex].Add(num);
     }
     
-    // Sort each bucket and concatenate
+    // STEP 4: Sort each bucket individually and concatenate results
     int index = 0;
     foreach (var bucket in buckets)
     {
+        // Only process non-empty buckets
         if (bucket.Count > 0)
         {
+            // Convert bucket to array for sorting
             int[] bucketArray = bucket.ToArray();
-            Array.Sort(bucketArray); // Use efficient sort for individual buckets
             
+            // Sort individual bucket using an efficient algorithm
+            // (Here we use built-in sort, but could use any O(n log n) sort)
+            Array.Sort(bucketArray);
+            
+            // Copy sorted elements back to main array
             foreach (int num in bucketArray)
                 arr[index++] = num;
         }
@@ -571,10 +711,16 @@ static void BucketSort(int[] arr)
 // Simple usage - but incredibly sophisticated under the hood!
 Array.Sort(arr);
 
-// What it actually does:
-// 1. QuickSort for general cases
-// 2. HeapSort when QuickSort depth limit exceeded (avoids O(n²))
-// 3. InsertionSort for small partitions (< 16 elements)
+// What it actually does internally:
+// 1. QuickSort for general cases (fast average performance)
+// 2. HeapSort when QuickSort depth limit exceeded (avoids O(n²) worst case)
+// 3. InsertionSort for small partitions (< 16 elements, reduces overhead)
+
+// This is called "IntroSort" (Introspective Sort) - a hybrid approach
+// that gets the best characteristics of multiple algorithms:
+// - Fast average case from QuickSort
+// - Guaranteed O(n log n) worst case from HeapSort  
+// - Efficient handling of small arrays from InsertionSort
 ```
 
 **📊 Complexity Analysis:**
