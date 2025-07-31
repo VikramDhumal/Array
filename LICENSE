@@ -1,0 +1,70 @@
+MIT License
+
+Copyright (c) 2024 Learn & Reflect: Software
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+===============================================================================
+ADDITIONAL DISCLAIMERS AND CLARIFICATIONS
+===============================================================================
+
+EDUCATIONAL PURPOSE DISCLAIMER:
+This software is provided purely for educational, learning, and reference
+purposes. It is intended to help developers understand sorting algorithms
+and prepare for programming interviews.
+
+NO LIABILITY WHATSOEVER:
+The author(s) explicitly disclaim ALL liability, responsibility, and
+accountability for ANY use of this software. This includes but is not
+limited to:
+- Any direct, indirect, incidental, special, or consequential damages
+- Any loss of data, profits, or business interruption
+- Any malfunction, error, or unexpected behavior
+- Any performance issues or inefficiencies
+- Any security vulnerabilities or risks
+- Any compatibility issues with systems or environments
+- Any use in production, commercial, or critical systems
+
+REFERENCE CODE ONLY:
+This code is provided AS REFERENCE MATERIAL ONLY. Users are strongly
+advised to:
+- Review, test, and validate any code before use
+- Adapt the code to their specific requirements and environments
+- Take full responsibility for any implementation decisions
+- Conduct proper testing and quality assurance
+- Seek professional advice for production use
+
+NO SUPPORT OR MAINTENANCE:
+The author(s) provide NO support, maintenance, updates, or assistance
+related to this software. Users accept full responsibility for any
+issues that may arise.
+
+USE AT YOUR OWN RISK:
+By using this software, you acknowledge that you do so entirely at
+your own risk and that you have been warned of the potential risks
+and limitations.
+
+CONTRIBUTION TERMS:
+Any contributions to this project are made with the understanding that
+they will be subject to the same license terms and disclaimers, and
+contributors agree to release the author(s) from any liability related
+to their contributions.
+
+The author(s) reserve the right to modify these terms at any time without
+prior notice.
