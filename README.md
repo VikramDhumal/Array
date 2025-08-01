@@ -84,6 +84,31 @@ static void BubbleSort(int[] arr)
 }
 ```
 
+**Step-by-Step Walkthrough (Array: [5, 1, 4, 2, 8])**
+
+Initial Array: `[5, 1, 4, 2, 8]`
+
+Pass 1:
+
+* (5,1) -> `[1, 5, 4, 2, 8]` (Swap 5, 1)
+* (5,4) -> `[1, 4, 5, 2, 8]` (Swap 5, 4)
+* (5,2) -> `[1, 4, 2, 5, 8]` (Swap 5, 2)
+* (5,8) -> `[1, 4, 2, 5, 8]` (No swap)
+* **End of Pass 1:** `[1, 4, 2, 5, | 8]` (8 is sorted)
+
+Pass 2:
+* (1,4) -> `[1, 4, 2, 5, 8]` (No swap)
+* (4,2) -> `[1, 2, 4, 5, 8]` (Swap 4, 2)
+* (4,5) -> `[1, 2, 4, 5, 8]` (No swap)
+* **End of Pass 2:** `[1, 2, 4, | 5, 8]` (5, 8 are sorted)
+
+Pass 3:
+* (1,2) -> `[1, 2, 4, 5, 8]` (No swap)
+* (2,4) -> `[1, 2, 4, 5, 8]` (No swap)
+* **End of Pass 3:** No swaps occurred. Array is sorted.
+
+Final Sorted Array: `[1, 2, 4, 5, 8]`
+
 **📊 Complexity Analysis:**
 - **Time:** O(n²) worst/average, O(n) best (already sorted)
 - **Space:** O(1) - in-place sorting
