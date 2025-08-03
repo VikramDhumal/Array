@@ -156,6 +156,28 @@ static void SelectionSort(int[] arr)
 }
 ```
 
+**Step-by-Step Walkthrough (Array: [64, 25, 12, 22, 11])**  
+
+Initial Array: `[64, 25, 12, 22, 11]`
+
+Pass 1:
+* Find minimum in `[64, 25, 12, 22, 11]` -> `11`
+* Swap `64` and `11` -> `[11 |, 25, 12, 22, 64]` (11 is sorted)
+
+Pass 2:
+* Find minimum in `[25, 12, 22, 64]` -> `12`
+* Swap `25` and `12` -> `[11, 12 |, 25, 22, 64]` (11, 12 are sorted)
+
+Pass 3:
+* Find minimum in `[25, 22, 64]` -> `22`
+* Swap `25` and `22` -> `[11, 12, 22 |, 25, 64]` (11, 12, 22 are sorted)
+
+Pass 4:
+* Find minimum in `[25, 64]` -> `25`
+* No swap needed
+
+Final Sorted Array: `[11, 12, 22, 25, 64]`
+
 **📊 Complexity Analysis:**
 - **Time:** O(n²) all cases - always scans entire remaining array
 - **Space:** O(1) - in-place sorting
